@@ -8,41 +8,38 @@ namespace WebApi.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly BookContext _context;
-        public BookController(BookContext context)
+        private readonly LibraryContext _context;
+        public BookController(LibraryContext context)
         {
             _context = context;
         }
 
+
         [HttpPost]
         public IActionResult Create(Book book)
         {
-            _context.Books.Add(book);
-            _context.SaveChanges();
+            _context.AddBook(book);
 
             return CreatedAtAction(nameof(Create), new {id = book.Id}, book);
         }
 
 
-
         [HttpGet("{id}")]
         public ActionResult<Book> Get(int id)
         {
-            var book = _context.Books.FirstOrDefault(p => p.Id == id);
+            var book = _context.GetBook(id);
             if (book is null) return NotFound();
 
             return book;
         }
 
 
-
         [HttpGet]
         public ActionResult<IEnumerable<Book>> GetAll()
         {
-            var books = _context.Books;
+            var books = _context.GetAllBooks();
             return books;
         }
-
 
 
         [HttpPut("{id}")]
@@ -50,25 +47,22 @@ namespace WebApi.Controllers
         {
             if(id != book.Id) return BadRequest();
 
-            var bookToUpdate = _context.Books.FirstOrDefault(p => p.Id == id);
+            var bookToUpdate = _context.GetBook(id);
             if(bookToUpdate is null) return NotFound();
 
-            _context.Entry(bookToUpdate).CurrentValues.SetValues(book);
-            _context.SaveChanges();
+            _context.UpdateBook(bookToUpdate, book);
 
             return NoContent();
         }
 
 
-
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var book = _context.Books.FirstOrDefault(p => p.Id == id);
+            var book = _context.GetBook(id);
             if (book is null) return NotFound();
 
-            _context.Books.Remove(book);
-            _context.SaveChanges();
+            _context.DeleteBook(book);
 
             return NoContent();
         }

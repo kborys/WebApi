@@ -6,8 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the DI container.
 {
     builder.Services.AddControllers();
-    builder.Services.AddDbContext<BookContext>(opt => opt.UseInMemoryDatabase("BooksDb"));
-    builder.Services.AddDbContext<AuthorContext>(opt => opt.UseInMemoryDatabase("AuthorsDb"));
+    builder.Services.AddDbContext<LibraryContext>(opt => opt.UseInMemoryDatabase(databaseName: "LibraryDb"));
 
     //Swagger
     builder.Services.AddEndpointsApiExplorer();
@@ -22,6 +21,13 @@ var app = builder.Build();
 {
     if (app.Environment.IsDevelopment())
     {
+        //ensure that database is created so it can be populated with data on model creating
+        using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+        {
+            var libraryContext = serviceScope.ServiceProvider.GetRequiredService<LibraryContext>();
+            libraryContext.Database.EnsureCreated();
+        }
+
         app.UseSwagger();
         app.UseSwaggerUI();
     }
@@ -37,6 +43,5 @@ var app = builder.Build();
 
     app.MapControllers();
 }
-
 
 app.Run();

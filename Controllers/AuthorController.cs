@@ -9,41 +9,38 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly AuthorContext _context;
-        public AuthorController(AuthorContext context)
+        private readonly LibraryContext _context;
+        public AuthorController(LibraryContext context)
         {
             _context = context;
         }
 
 
-
         [HttpPost]
         public IActionResult Create(Author author)
         {
-            _context.Authors.Add(author);
-            _context.SaveChanges();
+            _context.AddAuthor(author);
 
             return CreatedAtAction(nameof(Create), new {id = author.Id}, author);
         }
 
+
         [HttpGet("{id}")]
         public ActionResult<Author> Get(int id)
         {
-            var author = _context.Authors.FirstOrDefault(author => author.Id == id);
+            var author = _context.GetAuthor(id);
+
             if(author is null) return NotFound();
 
             return author;
         }
 
 
-
         [HttpGet]
         public ActionResult<IEnumerable<Author>> GetAll()
         {
-            var authors = _context.Authors;
-            return authors;
+            return _context.GetAllAuthors();
         }
-
 
 
         [HttpPut("{id}")]
@@ -51,27 +48,23 @@ namespace WebApi.Controllers
         {
             if (id != author.Id) return BadRequest();
 
-            var authorToUpdate = _context.Authors.FirstOrDefault(p => p.Id == id);
+            var authorToUpdate = _context.GetAuthor(id);
+
             if (authorToUpdate is null) return NotFound();
 
-            _context.Entry(authorToUpdate).CurrentValues.SetValues(author);
-            _context.SaveChanges();
-
+            _context.UpdateAuthor(authorToUpdate, author);
             return NoContent();
         }
-
 
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var author = _context.Authors.FirstOrDefault(p => p.Id == id);
+            var author = _context.GetAuthor(id);
 
-            if (author == null) return NotFound();
+            if (author is null) return NotFound();
 
-            _context.Authors.Remove(author);
-            _context.SaveChanges();
-
+            _context.DeleteAuthor(author);
             return NoContent();
         }
     }
