@@ -1,9 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using WebApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the DI container.
 {
     builder.Services.AddControllers();
-
+    builder.Services.AddDbContext<BookContext>(opt => opt.UseInMemoryDatabase("BooksDb"));
+    builder.Services.AddDbContext<AuthorContext>(opt => opt.UseInMemoryDatabase("AuthorsDb"));
 
     //Swagger
     builder.Services.AddEndpointsApiExplorer();
