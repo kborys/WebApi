@@ -10,7 +10,6 @@ namespace WebApi.Controllers
     public class AuthorController : ControllerBase
     {
         private readonly AuthorContext _context;
-
         public AuthorController(AuthorContext context)
         {
             _context = context;
@@ -31,9 +30,7 @@ namespace WebApi.Controllers
         public ActionResult<Author> Get(int id)
         {
             var author = _context.Authors.FirstOrDefault(author => author.Id == id);
-
-            if (author == null)
-                return NotFound();
+            if(author is null) return NotFound();
 
             return author;
         }
@@ -44,10 +41,6 @@ namespace WebApi.Controllers
         public ActionResult<IEnumerable<Author>> GetAll()
         {
             var authors = _context.Authors;
-
-            if (authors == null)
-                return NotFound();
-
             return authors;
         }
 
@@ -56,12 +49,10 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Author author)
         {
-            if (id != author.Id)
-                return BadRequest();
+            if (id != author.Id) return BadRequest();
 
             var authorToUpdate = _context.Authors.FirstOrDefault(p => p.Id == id);
-            if (authorToUpdate is null)
-                return NotFound();
+            if (authorToUpdate is null) return NotFound();
 
             _context.Entry(authorToUpdate).CurrentValues.SetValues(author);
             _context.SaveChanges();
@@ -76,8 +67,7 @@ namespace WebApi.Controllers
         {
             var author = _context.Authors.FirstOrDefault(p => p.Id == id);
 
-            if (author == null) 
-                return NotFound();
+            if (author == null) return NotFound();
 
             _context.Authors.Remove(author);
             _context.SaveChanges();
