@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -9,37 +10,38 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly LibraryContext _context;
-        public AuthorController(LibraryContext context)
+        private readonly IAuthorService _authorService;
+
+        public AuthorController(IAuthorService authorService)
         {
-            _context = context;
+            _authorService = authorService;
         }
 
 
         [HttpPost]
         public IActionResult Create(Author author)
         {
-            _context.AddAuthor(author);
+            _authorService.Create(author);
 
             return CreatedAtAction(nameof(Create), new {id = author.Id}, author);
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<Author> Get(int id)
+        public IActionResult Get(int id)
         {
-            var author = _context.GetAuthor(id);
+            var author = _authorService.GetById(id);
 
             if(author is null) return NotFound();
 
-            return author;
+            return Ok(author);
         }
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<Author>> GetAll()
+        public IActionResult GetAll()
         {
-            return _context.GetAllAuthors();
+            return Ok(_authorService.GetAll());
         }
 
 
@@ -48,11 +50,11 @@ namespace WebApi.Controllers
         {
             if (id != author.Id) return BadRequest();
 
-            var authorToUpdate = _context.GetAuthor(id);
+            var authorToUpdate = _authorService.GetById(id);
 
             if (authorToUpdate is null) return NotFound();
 
-            _context.UpdateAuthor(authorToUpdate, author);
+            _authorService.Update(authorToUpdate, author);
             return NoContent();
         }
 
@@ -60,11 +62,11 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var author = _context.GetAuthor(id);
+            var author = _authorService.GetById(id);
 
             if (author is null) return NotFound();
 
-            _context.DeleteAuthor(author);
+            _authorService.Delete(author);
             return NoContent();
         }
     }

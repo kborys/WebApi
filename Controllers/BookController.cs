@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Helpers;
 using WebApi.Models;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -8,37 +10,37 @@ namespace WebApi.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly LibraryContext _context;
-        public BookController(LibraryContext context)
+        private readonly IBookService _bookService;
+        public BookController(IBookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
 
         [HttpPost]
         public IActionResult Create(Book book)
         {
-            _context.AddBook(book);
+            _bookService.Create(book);
 
             return CreatedAtAction(nameof(Create), new {id = book.Id}, book);
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<Book> Get(int id)
+        public IActionResult Get(int id)
         {
-            var book = _context.GetBook(id);
+            var book = _bookService.GetById(id);
             if (book is null) return NotFound();
 
-            return book;
+            return Ok(book);
         }
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<Book>> GetAll()
+        public IActionResult GetAll()
         {
-            var books = _context.GetAllBooks();
-            return books;
+            var books = _bookService.GetAll();
+            return Ok(books);
         }
 
 
@@ -47,10 +49,10 @@ namespace WebApi.Controllers
         {
             if(id != book.Id) return BadRequest();
 
-            var bookToUpdate = _context.GetBook(id);
+            var bookToUpdate = _bookService.GetById(id);
             if(bookToUpdate is null) return NotFound();
 
-            _context.UpdateBook(bookToUpdate, book);
+            _bookService.Update(bookToUpdate, book);
 
             return NoContent();
         }
@@ -59,13 +61,12 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var book = _context.GetBook(id);
+            var book = _bookService.GetById(id);
             if (book is null) return NotFound();
 
-            _context.DeleteBook(book);
+            _bookService.Delete(book);
 
             return NoContent();
         }
-
     }
 }

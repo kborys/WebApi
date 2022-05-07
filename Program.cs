@@ -1,12 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using WebApi.Helpers;
 using WebApi.Models;
+using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the DI container.
+// Create services to the DI container.
 {
     builder.Services.AddControllers();
-    builder.Services.AddDbContext<LibraryContext>(opt => opt.UseInMemoryDatabase(databaseName: "LibraryDb"));
+    builder.Services.AddDbContext<DataContext>();
+    builder.Services.AddScoped<IAuthorService, AuthorService>();
+    builder.Services.AddScoped<IBookService, BookService>();
 
     //Swagger
     builder.Services.AddEndpointsApiExplorer();
@@ -24,7 +28,7 @@ var app = builder.Build();
         //ensure that database is created so it can be populated with data on model creating
         using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
         {
-            var libraryContext = serviceScope.ServiceProvider.GetRequiredService<LibraryContext>();
+            var libraryContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
             libraryContext.Database.EnsureCreated();
         }
 
