@@ -27,7 +27,7 @@ namespace WebApi.Services
 
         public Author GetById(int id)
         {
-            var author = _context.Authors.FirstOrDefault(p => p.Id == id);
+            var author = _context.Authors.FirstOrDefault(p => p.AuthorId == id);
 
             return author;
         }

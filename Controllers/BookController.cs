@@ -18,11 +18,11 @@ namespace WebApi.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(Book book)
+        public IActionResult Create(BookDto bookDto)
         {
-            _bookService.Create(book);
+            _bookService.Create(bookDto);
 
-            return CreatedAtAction(nameof(Create), new {id = book.Id}, book);
+            return CreatedAtAction(nameof(Create), new {id = bookDto.BookId}, bookDto);
         }
 
 
@@ -45,14 +45,14 @@ namespace WebApi.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Book book)
+        public IActionResult Update(int id, BookDto bookDto)
         {
-            if(id != book.Id) return BadRequest();
+            if(id != bookDto.BookId) return BadRequest();
 
             var bookToUpdate = _bookService.GetById(id);
             if(bookToUpdate is null) return NotFound();
 
-            _bookService.Update(bookToUpdate, book);
+            _bookService.Update(id, bookDto);
 
             return NoContent();
         }
@@ -64,7 +64,7 @@ namespace WebApi.Controllers
             var book = _bookService.GetById(id);
             if (book is null) return NotFound();
 
-            _bookService.Delete(book);
+            _bookService.Delete(id);
 
             return NoContent();
         }

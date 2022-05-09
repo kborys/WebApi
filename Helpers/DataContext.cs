@@ -23,16 +23,16 @@ namespace WebApi.Helpers
             //seed the database on model creating
             {
                 modelBuilder.Entity<Author>().HasData(
-                    new Author { Id = 1, FirstName = "Konrad", LastName = "Borys" });
+                    new Author { AuthorId = 1, FirstName = "Konrad", LastName = "Borys" });
 
-                modelBuilder.Entity<Book>().HasData(
-                    new Book { Id = 1, AuthorId = 1, Title = "How to WebAPI", IsRead = false },
-                    new Book { Id = 2, AuthorId = 1, Title = "How to C#", IsRead = true },
-                    new Book { Id = 3, AuthorId = 1, Title = "How to SQL", IsRead = true });
+                modelBuilder.Entity<BookEntity>().HasData(
+                    new BookEntity { BookId = 1, Title = "How to WebAPI", IsRead = false },
+                    new BookEntity { BookId = 2, Title = "How to C#", IsRead = true },
+                    new BookEntity { BookId = 3, Title = "How to SQL", IsRead = true });
             }
         }
 
         public DbSet<Author> Authors { get; set; } = null!;
-        public DbSet<Book> Books { get; set; } = null!;
+        public DbSet<BookEntity> Books { get; set; } = null!;
     }
 }

@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDbContext<DataContext>();
     builder.Services.AddScoped<IAuthorService, AuthorService>();
     builder.Services.AddScoped<IBookService, BookService>();
+    builder.Services.AddScoped<IBookMapper, BookMapper>();
 
     //Swagger
     builder.Services.AddEndpointsApiExplorer();

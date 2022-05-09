@@ -23,7 +23,7 @@ namespace WebApi.Controllers
         {
             _authorService.Create(author);
 
-            return CreatedAtAction(nameof(Create), new {id = author.Id}, author);
+            return CreatedAtAction(nameof(Create), new {id = author.AuthorId}, author);
         }
 
 
@@ -48,7 +48,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Author author)
         {
-            if (id != author.Id) return BadRequest();
+            if (id != author.AuthorId) return BadRequest();
 
             var authorToUpdate = _authorService.GetById(id);
 

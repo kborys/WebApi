@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Helpers;
 using WebApi.Models;
 
@@ -6,47 +7,53 @@ namespace WebApi.Services
 {
     public interface IBookService
     {
-        void Create(Book book);
-        Book GetById(int id);
-        DbSet<Book> GetAll();
-        void Update(Book bookToUpdate, Book book);
-        void Delete(Book book);
+        void Create(BookDto bookDto);
+        BookDto GetById(int id);
+        IEnumerable<BookDto> GetAll();
+        void Update(int bookId, BookDto bookDto);
+        void Delete(int bookId);
     }
     public class BookService : IBookService
     {
         private readonly DataContext _context;
-        public BookService(DataContext context)
+        private readonly IBookMapper _mapper;
+        public BookService(DataContext context, IBookMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
 
-        public void Create(Book book)
+        public void Create(BookDto bookDto)
         {
-            _context.Add(book);
+            _context.Add(_mapper.MapToEntity(bookDto));
             _context.SaveChanges();
         }
 
-        public Book GetById(int id)
+        public BookDto GetById(int id)
         {
-            var book = _context.Books.FirstOrDefault(p => p.Id == id);
+            var book = _context.Books.FirstOrDefault(p => p.BookId == id);
 
-            return book;
+            return _mapper.MapToDto(book);
         }
 
-        public DbSet<Book> GetAll()
+        public IEnumerable<BookDto> GetAll()
         {
-            return _context.Books;
+            return _context.Books.Select(x => _mapper.MapToDto(x));
         }
 
-        public void Update(Book bookToUpdate, Book book)
+        public void Update(int id, BookDto bookDto)
         {
-            _context.Entry(bookToUpdate).CurrentValues.SetValues(book);
+            var bookToUpdate = _context.Books.FirstOrDefault(p => p.BookId == id);
+            _context.Entry(bookToUpdate).CurrentValues.SetValues(bookDto);
+
             _context.SaveChanges();
         }
 
-        public void Delete(Book book)
+        public void Delete(int id)
         {
+            var book = _context.Books.FirstOrDefault(p => p.BookId == id);
+
             _context.Books.Remove(book);
             _context.SaveChanges();
         }
