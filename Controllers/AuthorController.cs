@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Models;
+using WebApi.Models.Authors;
 using WebApi.Services;
 
 namespace WebApi.Controllers
@@ -23,7 +24,7 @@ namespace WebApi.Controllers
         {
             _authorService.Create(author);
 
-            return CreatedAtAction(nameof(Create), new {id = author.AuthorId}, author);
+            return CreatedAtAction(nameof(Create), new {id = author.Id}, author);
         }
 
 
@@ -48,7 +49,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, Author author)
         {
-            if (id != author.AuthorId) return BadRequest();
+            if (id != author.Id) return BadRequest();
 
             var authorToUpdate = _authorService.GetById(id);
 

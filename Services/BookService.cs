@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebApi.Helpers;
 using WebApi.Models;
+using WebApi.Models.Books;
 
 namespace WebApi.Services
 {
@@ -32,7 +33,7 @@ namespace WebApi.Services
 
         public BookDto GetById(int id)
         {
-            var book = _context.Books.FirstOrDefault(p => p.BookId == id);
+            var book = _context.Books.FirstOrDefault(p => p.Id == id);
 
             return _mapper.MapToDto(book);
         }
@@ -44,7 +45,7 @@ namespace WebApi.Services
 
         public void Update(int id, BookDto bookDto)
         {
-            var bookToUpdate = _context.Books.FirstOrDefault(p => p.BookId == id);
+            var bookToUpdate = _context.Books.FirstOrDefault(p => p.Id == id);
             _context.Entry(bookToUpdate).CurrentValues.SetValues(bookDto);
 
             _context.SaveChanges();
@@ -52,7 +53,7 @@ namespace WebApi.Services
 
         public void Delete(int id)
         {
-            var book = _context.Books.FirstOrDefault(p => p.BookId == id);
+            var book = _context.Books.FirstOrDefault(p => p.Id == id);
 
             _context.Books.Remove(book);
             _context.SaveChanges();

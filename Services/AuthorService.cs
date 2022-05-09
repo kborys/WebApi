@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Helpers;
 using WebApi.Models;
+using WebApi.Models.Authors;
 
 namespace WebApi.Services
 {
@@ -27,7 +28,7 @@ namespace WebApi.Services
 
         public Author GetById(int id)
         {
-            var author = _context.Authors.FirstOrDefault(p => p.AuthorId == id);
+            var author = _context.Authors.FirstOrDefault(p => p.Id == id);
 
             return author;
         }

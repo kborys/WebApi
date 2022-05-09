@@ -28,10 +28,10 @@ var app = builder.Build();
     {
         //ensure that database is created so it can be populated with data on model creating
         using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
-        {
-            var libraryContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
-            libraryContext.Database.EnsureCreated();
-        }
+        //{
+        //    var libraryContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+        //    libraryContext.Database.EnsureCreated();
+        //}
 
         app.UseSwagger();
         app.UseSwaggerUI();

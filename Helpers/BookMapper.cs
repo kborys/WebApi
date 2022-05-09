@@ -1,34 +1,35 @@
 ﻿using WebApi.Models;
+using WebApi.Models.Books;
 
 namespace WebApi.Helpers
 {
     public interface IBookMapper
     {
-        BookEntity MapToEntity(BookDto dto);
-        BookDto MapToDto(BookEntity entity);
+        Book MapToEntity(BookDto dto);
+        BookDto MapToDto(Book entity);
     }
 
     public class BookMapper : IBookMapper
     {
-        public BookEntity MapToEntity(BookDto dto)
+        public Book MapToEntity(BookDto dto)
         {
-            return new BookEntity()
+            return new Book()
             {
-                BookId = dto.BookId,
+                Id = dto.Id,
                 Title = dto.Title,
                 IsRead = dto.IsRead,
-                Authors = dto.Authors
+                //Authors = dto.Authors
             };
         }
 
-        public BookDto MapToDto(BookEntity entity)
+        public BookDto MapToDto(Book entity)
         {
             return new BookDto()
             {
-                BookId = entity.BookId,
+                Id = entity.Id,
                 Title = entity.Title,
                 IsRead = entity.IsRead,
-                Authors = entity.Authors
+                //Authors = entity.Authors
             };
         }
     }

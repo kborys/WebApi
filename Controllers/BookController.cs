@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Helpers;
 using WebApi.Models;
+using WebApi.Models.Books;
 using WebApi.Services;
 
 namespace WebApi.Controllers
@@ -22,7 +23,7 @@ namespace WebApi.Controllers
         {
             _bookService.Create(bookDto);
 
-            return CreatedAtAction(nameof(Create), new {id = bookDto.BookId}, bookDto);
+            return CreatedAtAction(nameof(Create), new {id = bookDto.Id}, bookDto);
         }
 
 
@@ -47,7 +48,7 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, BookDto bookDto)
         {
-            if(id != bookDto.BookId) return BadRequest();
+            if(id != bookDto.Id) return BadRequest();
 
             var bookToUpdate = _bookService.GetById(id);
             if(bookToUpdate is null) return NotFound();

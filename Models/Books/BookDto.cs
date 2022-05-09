@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApi.Models.Authors;
 
-namespace WebApi.Models
+namespace WebApi.Models.Books
 {
     public class BookDto
     {
-        public int BookId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Title { get; set; }
         [Required]
         public bool IsRead { get; set; }
         [Required]
-        public List<Author> Authors { get; set; }
+        public ICollection<Author> Authors { get; set; }
     }
 }
